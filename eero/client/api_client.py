@@ -10,9 +10,11 @@ from .models import ErrorMeta
 
 logger = getLogger("eero")
 
+API_VERSION = "2.2"
+
 
 class APIClient(object):
-    API_ENDPOINT = "https://api-user.e2ro.com/2.2/{}"
+    API_ENDPOINT = "https://api-user.e2ro.com/{}/{}"
 
     def _parse_response(self, action, response) -> dict[str, Any]:
         data = json.loads(response.text)
@@ -21,6 +23,7 @@ class APIClient(object):
             if data["meta"]["code"] not in [
                 HTTPStatus.OK,
                 HTTPStatus.CREATED,
+                HTTPStatus.ACCEPTED,
             ]:
                 client_exception = ClientException(
                     data["meta"]["code"], data["meta"].get("error", "Unknown Error")
@@ -46,16 +49,20 @@ class APIClient(object):
                     data.get("meta", {}).get("code", HTTPStatus.INTERNAL_SERVER_ERROR),
                     data.get("meta", {}).get("error", "Unknown Error"),
                 ) from e
-        return data.get("data", {})
+        return data.get("data", data.get("meta", {}))
 
     def request(self, method, action, **kwargs):
-        response = requests.request(method, self.API_ENDPOINT.format(action), **kwargs)
+        response = requests.request(
+            method, self.API_ENDPOINT.format(API_VERSION, action), **kwargs
+        )
         return self._parse_response(action, response)
 
     def post(self, action, **kwargs):
-        response = requests.post(self.API_ENDPOINT.format(action), **kwargs)
+        response = requests.post(
+            self.API_ENDPOINT.format(API_VERSION, action), **kwargs
+        )
         return self._parse_response(action, response)
 
     def get(self, action, **kwargs):
-        response = requests.get(self.API_ENDPOINT.format(action), **kwargs)
+        response = requests.get(self.API_ENDPOINT.format(API_VERSION, action), **kwargs)
         return self._parse_response(action, response)

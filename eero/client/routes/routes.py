@@ -19,6 +19,7 @@ from ..models import (
     Thread,
     Updates,
     Account,
+    NoDataMeta,
 )
 
 
@@ -61,6 +62,7 @@ POST_RESOURCES: dict[str, Resource] = {
     "burst_reporters": ("networks/<network_id>/burst_reporters", BurstReporters),
     "reboot": ("networks/<network_id>/reboot", None),
     "reboot_eero": ("eeros/<eero_id>/reboot", None),
+    "run_speedtest": ("networks/<network_id>/speedtest", NoDataMeta),
 }
 
 

@@ -16,8 +16,11 @@ README_FILE = next(
     r for r in ["./README.md", "./README.txt", "./README"] if os.path.isfile(r)
 )
 
+with open("requirements.txt") as f:
+    install_requires = f.read().splitlines()
+
 setup(
-    name="eero",
+    name="eero-client",
     version=verstr,
     description="Manage eero network devices",
     long_description=open(README_FILE, "r").read(),
@@ -26,7 +29,11 @@ setup(
         "Intended Audience :: Developers",
         "Natural Language :: English",
         "Operating System :: OS Independent",
-        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Typing :: Typed",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Utilities",
         "License :: OSI Approved :: MIT License",
@@ -39,5 +46,7 @@ setup(
     packages=find_packages(exclude=["ez_setup", "example", "tests", "external"]),
     include_package_data=True,
     zip_safe=False,
-    install_requires=["requests"],
+    install_requires=install_requires,
+    python_requires=">=3.9",  # Require Python 3.9 or newer
+    package_data={"eero": ["py.typed"]},  # Include the py.typed file
 )

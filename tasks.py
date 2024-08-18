@@ -69,8 +69,6 @@ def publish(c):
 
 @task(
     pre=[
-        install_dependencies,
-        install_dev_dependencies,
         check_format,
         check_lint,
         check_type,

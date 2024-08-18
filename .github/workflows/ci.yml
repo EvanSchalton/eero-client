@@ -21,10 +21,11 @@ jobs:
         with:
           python-version: '3.9'  # Specify the Python version you want to use
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+        
+      - name: Install Dev Dependencies
+        run: pip install -r requirements-dev.txt
 
       - name: Run isort
         run: isort . --check --diff  # Check if imports are sorted correctly

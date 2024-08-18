@@ -3,7 +3,7 @@ name: CI/CD Release Workflow with Manual Major/Minor Version and Automatic Patch
 on:
   push:
     branches:
-      - main  # Triggers on pushes to the main branch
+      - master  # Triggers on pushes to the main branch
 
 jobs:
   test:

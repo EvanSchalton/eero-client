@@ -1,0 +1,42 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - master  # Run on every push to the master branch
+  pull_request:
+    branches:
+      - master  # Run on every pull request to the master branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'  # Specify the Python version you want to use
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install isort black pytest mypy ruff
+
+      - name: Run isort
+        run: isort . --check --diff  # Check if imports are sorted correctly
+
+      - name: Run black
+        run: black . --check --diff  # Check if the code is formatted according to black
+
+      - name: Run ruff
+        run: ruff . --check  # Run ruff to check for linting and style issues
+
+      - name: Run mypy
+        run: mypy .  # Run mypy to check for type hint issues
+
+      - name: Run pytest
+        run: pytest  # Run tests

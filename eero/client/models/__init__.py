@@ -6,6 +6,7 @@ from .diagnostics import Diagnostics
 from .error_meta import ErrorMeta
 from .forward import Forward
 from .networks import EeroDevice, GuestNetwork, Networks
+from .no_data_meta import NoDataMeta
 from .profile import Profile
 from .reservation import Reservation
 from .routing import Routing
@@ -13,7 +14,6 @@ from .speedtest import Speedtest
 from .support import Support
 from .thread import Thread
 from .updates import Updates
-from .no_data_meta import NoDataMeta
 
 __all__ = [
     "Account",

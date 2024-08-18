@@ -3,32 +3,11 @@ name: CI/CD Release Workflow with Manual Major/Minor Version and Automatic Patch
 on:
   push:
     branches:
-      - master  # Triggers on pushes to the main branch
+      - master  # Triggers on pushes to the master branch
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pytest
-
-      - name: Run tests
-        run: pytest
-
   release:
     runs-on: ubuntu-latest
-    needs: test  # Ensure tests pass before running the release
 
     steps:
       - name: Checkout repository
@@ -43,7 +22,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add eero/version.py
           git commit -m "ci: bump patch version"
-          git push origin main
+          git push origin master
 
       - name: Set up Python for packaging
         uses: actions/setup-python@v2

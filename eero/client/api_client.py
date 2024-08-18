@@ -33,7 +33,7 @@ class APIClient(object):
                 try:
                     ErrorMeta.model_validate(data)
                     return data
-                except:
+                except Exception:
                     raise client_exception
         except ClientException as e:
             raise e

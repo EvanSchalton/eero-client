@@ -1,11 +1,11 @@
-from typing import Any
-from .client import Client
-from ..exceptions import ClientException
+from ...exceptions import ClientException
+from ..api_client import APIClient
+
 
 class EeroAuthHandler:
     def __init__(self, session):
         self.session = session
-        self.client = Client()
+        self.client = APIClient()
 
     @property
     def _cookie_dict(self):
@@ -21,13 +21,15 @@ class EeroAuthHandler:
     def login(self, identifier):
         # type(string) -> string
         json = dict(login=identifier)
-        data = self.client.post('login', json=json)
-        return data['user_token']
+        data = self.client.post("login", json=json)
+        return data["user_token"]
 
     def login_verify(self, verification_code, user_token):
-        json = dict(code=verification_code)
-        response = self.client.post('login/verify', json=json,
-                                    cookies=dict(s=user_token))
+        response = self.client.post(
+            "login/verify",
+            json=dict(code=verification_code),
+            cookies=dict(s=user_token),
+        )
         self.session.cookie = user_token
         return response
 
@@ -35,13 +37,15 @@ class EeroAuthHandler:
         try:
             return func()
         except ClientException as exception:
-            if (exception.status == 401
-                    and exception.error_message == 'error.session.refresh'):
+            if (
+                exception.status == 401
+                and exception.error_message == "error.session.refresh"
+            ):
                 self.login_refresh()
                 return func()
             else:
                 raise
 
     def login_refresh(self):
-        response = self.client.post('login/refresh', cookies=self._cookie_dict)
-        self.session.cookie = response['user_token']
+        response = self.client.post("login/refresh", cookies=self._cookie_dict)
+        self.session.cookie = response["user_token"]

@@ -1,7 +1,8 @@
-from abc import abstractproperty
+from abc import abstractmethod
 
 
 class SessionStorage(object):
-    @abstractproperty
+    @property
+    @abstractmethod
     def cookie(self):
         pass

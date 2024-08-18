@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class Reservation(BaseModel):
     url: str
     device: str

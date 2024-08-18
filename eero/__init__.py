@@ -1,8 +1,8 @@
 from .client import Eero
-from .session import SessionStorage, FileSessionStorage
 from .exceptions import ClientException
-from .version import __version__
 from .logger import log_setup
+from .session import FileSessionStorage, SessionStorage
+from .version import __version__
 
 log_setup()
 __all__ = [

@@ -1,7 +1,8 @@
 from pydantic import BaseModel
+
 from .device import RoutingDeviceData
-from .reservation import Reservation
 from .forward import Forward
+from .reservation import Reservation
 
 
 class RoutingDevices(BaseModel):

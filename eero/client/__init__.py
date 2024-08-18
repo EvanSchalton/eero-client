@@ -1,5 +1,3 @@
-from .eero import Eero
+from .clients import Eero
 
-__all__ = [
-    "Eero"
-]
+__all__ = ["Eero"]

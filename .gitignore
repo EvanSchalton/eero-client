@@ -202,5 +202,6 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python
 
 *.ipynb
+!example.ipynb
 *.json
 debugging/

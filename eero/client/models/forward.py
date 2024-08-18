@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class Forward(BaseModel):
     url: str
     ip: str

@@ -1,15 +1,17 @@
 import json
-import requests
-from typing import Any
-from .models import ErrorMeta
-from ..exceptions import ClientException
-from logging import getLogger
 from http import HTTPStatus
+from logging import getLogger
+from typing import Any
+
+import requests
+
+from ..exceptions import ClientException
+from .models import ErrorMeta
 
 logger = getLogger("eero")
 
 
-class Client(object):
+class APIClient(object):
     API_ENDPOINT = "https://api-user.e2ro.com/2.2/{}"
 
     def _parse_response(self, action, response) -> dict[str, Any]:

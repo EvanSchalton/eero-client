@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class Support(BaseModel):
     support_phone: str
     contact_url: str

@@ -24,6 +24,7 @@ setup(
     version=verstr,
     description="Manage eero network devices",
     long_description=open(README_FILE, "r").read(),
+    long_description_content_type='text/markdown',
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
@@ -42,7 +43,8 @@ setup(
     author_email="Evan.Schalton@Gmail.com",
     url="https://github.com/EvanSchalton/eero-client",
     license="MIT License",
-    packages=find_packages(exclude=["ez_setup", "example", "tests", "external"]),
+    packages=find_packages(
+        exclude=["ez_setup", "example", "tests", "external"]),
     include_package_data=True,
     zip_safe=False,
     install_requires=install_requires,

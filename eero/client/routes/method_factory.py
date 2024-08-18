@@ -3,12 +3,12 @@ import os
 from copy import copy
 from logging import getLogger
 from pathlib import Path
-from typing import Any, Self
+from typing import Any
 
 from pydantic import BaseModel, TypeAdapter, ValidationError
 
-from .routes import GET_RESOURCES, POST_RESOURCES, Resource
 from ..models import ErrorMeta
+from .routes import GET_RESOURCES, POST_RESOURCES, Resource
 
 logger = getLogger("eero")
 
@@ -30,7 +30,7 @@ def make_method(method: str, action: str, resource: Resource, **kwargs: Any):
 
     logger.debug("%s: %s (%s)", method, action, resource)
 
-    def func(self: Self, **kwargs: str) -> None | dict[str, Any] | BaseModel:
+    def func(self, **kwargs: str) -> None | dict[str, Any] | BaseModel:
         url, model = resource
         logger.debug("%s: %s (%s)", action, url, model)
         for key, value in kwargs.items():
@@ -47,11 +47,13 @@ def make_method(method: str, action: str, resource: Resource, **kwargs: Any):
                         json.dumps(result, indent=2)
                     )
 
-                if isinstance(result, list):
-                    tpye_adatper = TypeAdapter(model)
-                    return tpye_adatper.validate_python(result)
+                if isinstance(model, TypeAdapter):
+                    return model.validate_python(result)
                 if model == ErrorMeta:
                     logger.info(f"Not Implemented: {action} (expects error)")
+                if not isinstance(model, BaseModel):
+                    logger.error("Model is not a BaseModel: %s", model)
+                    raise ValueError("Model %s is not a BaseModel", model)
                 return model.model_validate(result)
             except ValidationError as e:
                 if model == ErrorMeta:

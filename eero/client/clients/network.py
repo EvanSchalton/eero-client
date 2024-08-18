@@ -1,19 +1,14 @@
-import os
-from logging import getLogger
-from pathlib import Path
-from typing import Any, Self, cast
+from typing import Any, cast
+
 from ...session import SessionStorage
 from ..api_client import APIClient
-from .eero_auth_handler import EeroAuthHandler
 from ..models import NetworkInfo
-from ..routes import (
-    APITypes,
-    network_client_methods,
-)
+from ..routes import APITypes, network_client_methods
+from .eero_auth_handler import EeroAuthHandler
 
 
 def __network_client____init___(
-    self: Self,
+    self,
     session: SessionStorage,
     network_info: NetworkInfo,
     client: APIClient | None = None,

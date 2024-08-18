@@ -1,11 +1,5 @@
-from .routes import (
-    Resource,
-    GET_RESOURCES,
-    POST_RESOURCES,
-    APITypes,
-)
-
 from .method_factory import network_client_methods
+from .routes import GET_RESOURCES, POST_RESOURCES, APITypes, Resource
 
 __all__ = [
     "Resource",

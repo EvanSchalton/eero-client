@@ -1,0 +1,9 @@
+[tool.black]
+line-length = 88
+target-version = ['py310']
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+ignore_missing_imports = true

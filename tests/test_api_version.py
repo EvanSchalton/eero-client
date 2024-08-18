@@ -1,14 +1,15 @@
-from eero.version import __version__
 from eero.client.api_client import API_VERSION
+from eero.version import __version__
 
 
 def get_version(version_str: str) -> tuple[int, int, int | None]:
     # Sometimes the version will only be major.minor other times it'll be major.minor.patch
-    version = list(map(int, version_str.split(".")))
-    if len(version) == 2:
-        version.append(None)
+    version: list[int] = list(map(int, version_str.split(".")))
+    major: int = version[0]
+    minor: int = version[1]
+    patch: int | None = version[2] if len(version) == 3 else None
 
-    return tuple(version)
+    return major, minor, patch
 
 
 def test_version_matches_api_version() -> None:

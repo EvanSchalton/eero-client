@@ -205,3 +205,4 @@ pyrightconfig.json
 !example.ipynb
 *.json
 debugging/
+tree.txt

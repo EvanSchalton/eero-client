@@ -30,7 +30,6 @@ setup(
         "Natural Language :: English",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Typing :: Typed",
@@ -47,6 +46,6 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=install_requires,
-    python_requires=">=3.9",  # Require Python 3.9 or newer
+    python_requires=">=3.10",  # Require Python 3.10 or newer
     package_data={"eero": ["py.typed"]},  # Include the py.typed file
 )

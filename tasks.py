@@ -67,12 +67,32 @@ def publish(c):
     c.run("twine upload dist/*")
 
 
+@task
+def check_publish(c):
+    """Publish the package to PyPI."""
+    c.run("pip install twine")  # Ensure twine is installed
+    c.run("twine check dist/*")
+
+
+@task(pre=[build, publish])
+def release(c):
+    """Release the package (build and publish)."""
+    pass
+
+
+@task(pre=[build, check_publish])
+def check_release(c):
+    """Release the package (build and publish)."""
+    pass
+
+
 @task(
     pre=[
         check_format,
         check_lint,
         check_type,
         test,
+        check_release,
     ]
 )
 def ci(c):
@@ -83,12 +103,6 @@ def ci(c):
 @task(pre=[format, lint, ci])
 def prep_ci(c):
     """Run all CI tasks (install, check_format, check_lint, type check, and test)."""
-    pass
-
-
-@task(pre=[build, publish])
-def release(c):
-    """Release the package (build and publish)."""
     pass
 
 

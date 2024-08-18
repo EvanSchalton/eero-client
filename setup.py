@@ -24,6 +24,7 @@ setup(
     version=verstr,
     description="Manage eero network devices",
     long_description=open(README_FILE, "r").read(),
+    long_description_content_type="text/markdown",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",

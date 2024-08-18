@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          pip install isort black pytest mypy ruff
+          pip install -r requirements-dev.txt
 
       - name: Run isort
         run: isort . --check --diff  # Check if imports are sorted correctly

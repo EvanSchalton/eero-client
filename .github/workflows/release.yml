@@ -13,6 +13,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Dev Dependencies
+        run: pip install -r requirements-dev.txt
+
       - name: Bump patch version
         run: invoke bump-version
 

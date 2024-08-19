@@ -30,15 +30,15 @@ def make_method(method: str, action: str, resource: Resource, **kwargs: Any):
 
     logger.debug("%s: %s (%s)", method, action, resource)
 
-    def func(self, **kwargs: str) -> None | dict[str, Any] | BaseModel:
+    def func(
+        self, **kwargs: str
+    ) -> None | dict[str, Any] | BaseModel | list[BaseModel]:
         url, model = resource
         logger.debug("%s: %s (%s)", action, url, model)
         for key, value in kwargs.items():
             url = url.replace("<{}>".format(key), str(value))
 
-        result = self.refreshed(
-            lambda: self.client.request(method, url, cookies=self._cookie_dict)
-        )
+        result = self.refreshed(lambda: self.client.request(method, url))
 
         if model is not None:
             try:
@@ -47,14 +47,27 @@ def make_method(method: str, action: str, resource: Resource, **kwargs: Any):
                         json.dumps(result, indent=2)
                     )
 
-                if isinstance(model, TypeAdapter):
-                    return model.validate_python(result)
-                if model == ErrorMeta:
-                    logger.info(f"Not Implemented: {action} (expects error)")
-                if not isinstance(model, BaseModel):
-                    logger.error("Model is not a BaseModel: %s", model)
-                    raise ValueError("Model %s is not a BaseModel", model)
-                return model.model_validate(result)
+                logger.debug("Validating %s: %s", action, result)
+                logger.debug("Model: %s", model)
+                logger.debug("Model Type: %s", type(model))
+                logger.debug("Result: %s", result)
+
+                try:
+                    if isinstance(result, list):
+                        return TypeAdapter(
+                            list[type(model)]  # type: ignore
+                        ).validate_python(result)
+                    return model.model_validate(result)  # type: ignore
+                except Exception as e:
+                    logger.error(
+                        "[%s] Failed to Marshal %s: %s",
+                        action,
+                        e,
+                        result,
+                        exc_info=True,
+                    )
+                    raise e
+
             except ValidationError as e:
                 if model == ErrorMeta:
                     logger.warn(f"Not Implemented: {action} (expected error)")

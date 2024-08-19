@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
 
-class SessionStorage(object):
+class SessionStorage:
     @property
     @abstractmethod
     def cookie(self):

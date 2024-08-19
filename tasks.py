@@ -4,6 +4,12 @@ from invoke import task
 
 
 @task
+def clear(c):
+    """Clear the terminal."""
+    c.run("clear")
+
+
+@task
 def install_dependencies(c):
     """Install project dependencies."""
     c.run("pip install -r requirements.txt")
@@ -100,7 +106,7 @@ def ci(c):
     pass
 
 
-@task(pre=[format, lint, ci])
+@task(pre=[clear, format, lint, ci])
 def prep_ci(c):
     """Run all CI tasks (install, check_format, check_lint, type check, and test)."""
     # delete the build and dist directories

@@ -1,6 +1,6 @@
 from ...exceptions import ClientException
-from ..api_client import APIClient
 from ...session import SessionStorage
+from ..api_client import APIClient
 
 
 class EeroAuthHandler:

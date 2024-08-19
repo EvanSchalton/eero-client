@@ -1,3 +1,4 @@
+from ...session import SessionStorage
 from ..api_client import APIClient
 from ..models.account import Account
 from ..routes.method_factory import make_method
@@ -7,7 +8,7 @@ from .network import NetworkClient
 
 
 class Eero(EeroAuthHandler):
-    def __init__(self, session, api_client=APIClient | None) -> None:
+    def __init__(self, session: SessionStorage, api_client=APIClient | None) -> None:
         self.session = session
         if api_client is None:
             api_client = APIClient()
@@ -32,7 +33,9 @@ class Eero(EeroAuthHandler):
         return self._network_clients
 
     @network_clients.setter
-    def network_clients(self, network_clients: dict[str, NetworkClient]):  # type: ignore
+    def network_clients(
+        self, network_clients: dict[str, NetworkClient]  # type: ignore
+    ):
         self._network_clients = network_clients
 
     def account(self) -> Account:

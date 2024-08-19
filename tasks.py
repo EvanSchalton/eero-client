@@ -103,6 +103,8 @@ def ci(c):
 @task(pre=[format, lint, ci])
 def prep_ci(c):
     """Run all CI tasks (install, check_format, check_lint, type check, and test)."""
+    # delete the build and dist directories
+    c.run("rm -rf build dist")
     pass
 
 

@@ -1,9 +1,10 @@
 from ...exceptions import ClientException
+from ...session import SessionStorage
 from ..api_client import APIClient
 
 
 class EeroAuthHandler:
-    def __init__(self, session):
+    def __init__(self, session: SessionStorage):
         self.session = session
         self.client = APIClient()
 

@@ -1,5 +1,5 @@
 from ...exceptions import ClientException
-from ...session import SessionStorage, MemorySessionStorage
+from ...session import MemorySessionStorage, SessionStorage
 from ..api_client import APIClient
 
 
@@ -12,21 +12,21 @@ class EeroAuthHandler:
         if session is None:
             session = MemorySessionStorage()
         if client is None:
-            client = APIClient()
+            client = APIClient(session_cookie=session.cookie)
 
         self.session = session
         self.client = client
 
-    @property
-    def _cookie_dict(self):
-        if not self.is_authenticated:
-            return dict()
-        else:
-            return dict(s=self.session.cookie)
+    def _pass_cookie(self):
+        self.client.session_cookie = self.session.cookie
 
     @property
     def is_authenticated(self) -> bool:
-        return self.session.cookie is not None
+        if self.session.cookie is not None:
+            if self.client.session_cookie is None:
+                self._pass_cookie()
+            return True
+        return False
 
     def login(self, identifier):
         # type(string) -> string
@@ -35,12 +35,12 @@ class EeroAuthHandler:
         return data["user_token"]
 
     def login_verify(self, verification_code, user_token):
+        self.session.cookie = user_token
+        self._pass_cookie()
         response = self.client.post(
             "login/verify",
             json=dict(code=verification_code),
-            cookies=dict(s=user_token),
         )
-        self.session.cookie = user_token
         return response
 
     def refreshed(self, func):
@@ -57,5 +57,6 @@ class EeroAuthHandler:
                 raise
 
     def login_refresh(self):
-        response = self.client.post("login/refresh", cookies=self._cookie_dict)
+        response = self.client.post("login/refresh")
         self.session.cookie = response["user_token"]
+        self._pass_cookie()

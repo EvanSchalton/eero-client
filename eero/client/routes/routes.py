@@ -26,15 +26,13 @@ from ..models import (
 
 class Resource(NamedTuple):
     url: str
-    model: BaseModel | TypeAdapter | None
+    model: type[BaseModel] | type[TypeAdapter] | None
 
 
 GET_RESOURCES: dict[str, Resource] = {
     "account": Resource("account", Account),
     "ac_compat": Resource("networks/<network_id>/ac_compat", ACCompat),
-    "device_blacklist": Resource(
-        "networks/<network_id>/blacklist", Device
-    ),
+    "device_blacklist": Resource("networks/<network_id>/blacklist", Device),
     "devices": Resource("networks/<network_id>/devices", Device),
     "diagnostics": Resource("networks/<network_id>/diagnostics", Diagnostics),
     "eeros": Resource("networks/<network_id>/eeros", EeroDevice),
@@ -46,13 +44,9 @@ GET_RESOURCES: dict[str, Resource] = {
     "guestnetwork": Resource("networks/<network_id>/guestnetwork", GuestNetwork),
     # "password": Resource("networks/<network_id>/password", None),
     "profiles": Resource("networks/<network_id>/profiles", Profile),
-    "reservations": Resource(
-        "networks/<network_id>/reservations", Reservation
-    ),
+    "reservations": Resource("networks/<network_id>/reservations", Reservation),
     # "settings": Resource("networks/<network_id>/settings", None),
-    "speedtest": Resource(
-        "networks/<network_id>/speedtest", Speedtest
-    ),
+    "speedtest": Resource("networks/<network_id>/speedtest", Speedtest),
     # "transfer": Resource("networks/<network_id>/transfer", None),
     "updates": Resource("networks/<network_id>/updates", Updates),
     "support": Resource("networks/<network_id>/support", Support),

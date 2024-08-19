@@ -47,14 +47,29 @@ def make_method(method: str, action: str, resource: Resource, **kwargs: Any):
                         json.dumps(result, indent=2)
                     )
 
-                if isinstance(model, TypeAdapter):
-                    return model.validate_python(result)
-                if model == ErrorMeta:
-                    logger.info(f"Not Implemented: {action} (expects error)")
-                if not isinstance(model, BaseModel):
-                    logger.error("Model is not a BaseModel: %s", model)
-                    raise ValueError("Model %s is not a BaseModel", model)
-                return model.model_validate(result)
+                logger.debug("Validating %s: %s", action, result)
+                logger.debug("Model: %s", model)
+                logger.debug("Model Type: %s", type(model))
+                logger.debug("Result: %s", result)
+                # if isinstance(model, TypeAdapter):
+                #     return model.validate_python(result)
+                # if model == ErrorMeta:
+                #     logger.info(f"Not Implemented: {action} (expects error)")
+                # # if not isinstance(model, BaseModel):
+                # #     logger.error("Model is not a BaseModel: %s", model)
+                # #     raise ValueError("Model %s is not a BaseModel" % model)
+                # return model.model_validate(result)
+
+                try:
+                    if isinstance(result, list):
+                        return TypeAdapter(list[model]).validate_python(result)
+                    return model.model_validate(result)
+                except Exception as e:
+                    logger.error(
+                        "[%s] Failed to Marshal %s: %s", action, e, result, exc_info=True
+                    )
+                    raise e
+
             except ValidationError as e:
                 if model == ErrorMeta:
                     logger.warn(f"Not Implemented: {action} (expected error)")

@@ -26,32 +26,32 @@ from ..models import (
 
 class Resource(NamedTuple):
     url: str
-    model: type[BaseModel] | type[TypeAdapter] | None
+    model: BaseModel | TypeAdapter | None
 
 
 GET_RESOURCES: dict[str, Resource] = {
     "account": Resource("account", Account),
     "ac_compat": Resource("networks/<network_id>/ac_compat", ACCompat),
     "device_blacklist": Resource(
-        "networks/<network_id>/blacklist", TypeAdapter[list[Device]]
+        "networks/<network_id>/blacklist", Device
     ),
-    "devices": Resource("networks/<network_id>/devices", TypeAdapter[list[Device]]),
+    "devices": Resource("networks/<network_id>/devices", Device),
     "diagnostics": Resource("networks/<network_id>/diagnostics", Diagnostics),
-    "eeros": Resource("networks/<network_id>/eeros", TypeAdapter[list[EeroDevice]]),
-    "forwards": Resource("networks/<network_id>/forwards", TypeAdapter[list[Forward]]),
+    "eeros": Resource("networks/<network_id>/eeros", EeroDevice),
+    "forwards": Resource("networks/<network_id>/forwards", Forward),
     "ouicheck": Resource(
         "networks/<network_id>/ouicheck",
         ErrorMeta,  # TODO: Create Model (requires a subscription)
     ),
     "guestnetwork": Resource("networks/<network_id>/guestnetwork", GuestNetwork),
     # "password": Resource("networks/<network_id>/password", None),
-    "profiles": Resource("networks/<network_id>/profiles", TypeAdapter[list[Profile]]),
+    "profiles": Resource("networks/<network_id>/profiles", Profile),
     "reservations": Resource(
-        "networks/<network_id>/reservations", TypeAdapter[list[Reservation]]
+        "networks/<network_id>/reservations", Reservation
     ),
     # "settings": Resource("networks/<network_id>/settings", None),
     "speedtest": Resource(
-        "networks/<network_id>/speedtest", TypeAdapter[list[Speedtest]]
+        "networks/<network_id>/speedtest", Speedtest
     ),
     # "transfer": Resource("networks/<network_id>/transfer", None),
     "updates": Resource("networks/<network_id>/updates", Updates),

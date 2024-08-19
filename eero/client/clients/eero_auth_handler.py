@@ -1,12 +1,21 @@
 from ...exceptions import ClientException
-from ...session import SessionStorage
+from ...session import SessionStorage, MemorySessionStorage
 from ..api_client import APIClient
 
 
 class EeroAuthHandler:
-    def __init__(self, session: SessionStorage):
+    def __init__(
+        self,
+        session: SessionStorage | None = None,
+        client: APIClient | None = None,
+    ):
+        if session is None:
+            session = MemorySessionStorage()
+        if client is None:
+            client = APIClient()
+
         self.session = session
-        self.client = APIClient()
+        self.client = client
 
     @property
     def _cookie_dict(self):

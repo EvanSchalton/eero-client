@@ -8,15 +8,13 @@ from .network import NetworkClient
 
 
 class Eero(EeroAuthHandler):
-    def __init__(self, session: SessionStorage, api_client=APIClient | None) -> None:
+    def __init__(self, session: SessionStorage) -> None:
         self.session = session
-        if api_client is None:
-            api_client = APIClient()
-        self.client = api_client
-        self._network_clients: dict[str, NetworkClient] | None = None  # type: ignore
+        self.client = APIClient()
+        self._network_clients: dict[str, NetworkClient] | None = None
 
     @property
-    def network_clients(self) -> dict[str, NetworkClient]:  # type: ignore
+    def network_clients(self) -> dict[str, NetworkClient]:
         if self._network_clients is None:
             if not self.is_authenticated:
                 raise ValueError("Not authenticated")
@@ -27,18 +25,20 @@ class Eero(EeroAuthHandler):
                     client=self.client,
                     **i.model_dump(),
                 )
-                for i in self.account().networks.data
+                for i in self.account.networks.data
             }
 
         return self._network_clients
 
     @network_clients.setter
     def network_clients(
-        self, network_clients: dict[str, NetworkClient]  # type: ignore
+        self, network_clients: dict[str, NetworkClient]
     ):
         self._network_clients = network_clients
 
+    @property
     def account(self) -> Account:
+        # return Account.model_validate(self.client.get("account", cookies=self._cookie_dict))
         return make_method(
             method="get",
             action="account",

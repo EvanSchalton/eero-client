@@ -1,3 +1,56 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "eero-client"
+dynamic = ["version"]
+description = "Manage eero network devices"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+keywords = ["eero"]
+authors = [
+    { name = "Evan Schalton", email = "Evan.Schalton@Gmail.com" },
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Typing :: Typed",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+    "pydantic>=2.8.2",
+    "requests>=2.32.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/EvanSchalton/eero-client"
+
+[dependency-groups]
+dev = [
+    "black[jupyter]>=24.8.0",
+    "isort>=5.13.2",
+    "mypy>=1.11.1",
+    "pytest>=8.3.2",
+    "ruff>=0.6.1",
+    "invoke>=2.2.0",
+    "types-requests>=2.32.0.20240712",
+]
+
+[tool.hatch.version]
+path = "eero/version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["eero"]
+
 [tool.black]
 line-length = 88
 target-version = ['py310']

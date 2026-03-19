@@ -3,10 +3,10 @@ name: CI Workflow
 on:
   push:
     branches:
-      - master  # Run on every push to the master branch
+      - master
   pull_request:
     branches:
-      - master  # Run on every pull request to the master branch
+      - master
 
 jobs:
   test:
@@ -14,18 +14,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.10'  # Specify the Python version you want to use
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
 
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-
-      - name: Install Dev Dependencies
-        run: pip install -r requirements-dev.txt
+      - name: Install dependencies
+        run: uv sync
 
       - name: Run CI Tasks
-        run: invoke ci
+        run: uv run invoke ci

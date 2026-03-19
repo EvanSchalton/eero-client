@@ -206,3 +206,6 @@ pyrightconfig.json
 *.json
 debugging/
 tree.txt
+
+# uv
+uv.lock

@@ -10,18 +10,6 @@ def clear(c):
 
 
 @task
-def install_dependencies(c):
-    """Install project dependencies."""
-    c.run("pip install -r requirements.txt")
-
-
-@task
-def install_dev_dependencies(c):
-    """Install development dependencies."""
-    c.run("pip install -r requirements-dev.txt")
-
-
-@task
 def check_format(c):
     """Run isort and black for code formatting."""
     c.run("isort . --check --diff")
@@ -62,32 +50,17 @@ def test(c):
 @task
 def build(c):
     """Build the Python package."""
-    c.run("pip install wheel")  # Ensure wheel is installed
-    c.run("python setup.py sdist bdist_wheel")
+    c.run("uv build")
 
 
 @task
 def publish(c):
     """Publish the package to PyPI."""
-    c.run("pip install twine")  # Ensure twine is installed
-    c.run("twine upload dist/*")
-
-
-@task
-def check_publish(c):
-    """Publish the package to PyPI."""
-    c.run("pip install twine")  # Ensure twine is installed
-    c.run("twine check dist/*")
+    c.run("uv publish")
 
 
 @task(pre=[build, publish])
 def release(c):
-    """Release the package (build and publish)."""
-    pass
-
-
-@task(pre=[build, check_publish])
-def check_release(c):
     """Release the package (build and publish)."""
     pass
 
@@ -98,20 +71,18 @@ def check_release(c):
         check_lint,
         check_type,
         test,
-        check_release,
+        build,
     ]
 )
 def ci(c):
-    """Run all CI tasks (install, check_format, check_lint, type check, and test)."""
+    """Run all CI tasks (check_format, check_lint, type check, test, and build)."""
     pass
 
 
 @task(pre=[clear, format, lint, ci])
 def prep_ci(c):
     """Run all CI tasks (install, check_format, check_lint, type check, and test)."""
-    # delete the build and dist directories
     c.run("rm -rf build dist")
-    pass
 
 
 @task

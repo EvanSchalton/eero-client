@@ -373,7 +373,7 @@ class PremiumDetails(BaseModel):
     tier: str
     is_iap_customer: bool | None = None
     payment_method: str | None = None
-    interval: str
+    interval: str | None = None
     next_billing_event_date: datetime | None = None
     is_my_subscription: bool
 
@@ -423,8 +423,8 @@ class Networks(BaseModel):
     access_expires_on: datetime | None = None
     guest_network: GuestNetwork
     amazon_account_linked: bool
-    amazon_directed_id: str
-    amazon_full_name: str
+    amazon_directed_id: str | None = None
+    amazon_full_name: str | None = None
     ffs: bool
     temporary_flags: dict[str, Any]
     alexa_skill: bool

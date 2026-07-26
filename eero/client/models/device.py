@@ -77,6 +77,17 @@ class RoutingDeviceData(BaseModel):
     nickname: str | None = None
 
 
+class DeviceUsage(BaseModel):
+    down_mbps: float
+    up_mbps: float
+
+
+class DeviceIPv6Address(BaseModel):
+    address: str
+    scope: str
+    interface: str | None = None
+
+
 class ProfileDevice(RoutingDeviceData):
     model_config = ConfigDict(protected_namespaces=())
     manufacturer: str | None = None
@@ -92,7 +103,7 @@ class ProfileDevice(RoutingDeviceData):
     first_active: datetime | None = None
     connectivity: DeviceConnectivity
     interface: Interface
-    usage: str | None = None
+    usage: DeviceUsage | str | None = None
     homekit: HomeKit | None = None
     device_type: str
     auth: str | None = None
@@ -104,7 +115,7 @@ class ProfileDevice(RoutingDeviceData):
 
 class Device(ProfileDevice):
     eui64: str
-    ipv6_addresses: list[str]
+    ipv6_addresses: list[DeviceIPv6Address | str]
     profile: Profile | None = None
     blacklisted: bool | None = None
     is_guest: bool

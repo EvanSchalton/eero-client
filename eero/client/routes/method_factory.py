@@ -55,7 +55,7 @@ def make_method(method: str, action: str, resource: Resource, **kwargs: Any):
                 try:
                     if isinstance(result, list):
                         return TypeAdapter(
-                            list[type(model)]  # type: ignore
+                            list[model]  # type: ignore
                         ).validate_python(result)
                     return model.model_validate(result)  # type: ignore
                 except Exception as e:
@@ -70,7 +70,7 @@ def make_method(method: str, action: str, resource: Resource, **kwargs: Any):
 
             except ValidationError as e:
                 if model == ErrorMeta:
-                    logger.warn(f"Not Implemented: {action} (expected error)")
+                    logger.warning(f"Not Implemented: {action} (expected error)")
                     return result
                 logger.error("Failed to validate %s: %s", action, e)
         return result

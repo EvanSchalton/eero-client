@@ -122,9 +122,16 @@ class DHCPIP(BaseModel):
     router: str
 
 
+class DHCPCustomRange(BaseModel):
+    subnet_ip: str
+    subnet_mask: str | None = None
+    start_ip: str | None = None
+    end_ip: str | None = None
+
+
 class DHCP(BaseModel):
     mode: str
-    custom: str | None = None
+    custom: DHCPCustomRange | str | None = None
 
 
 class Lease(BaseModel):
@@ -198,6 +205,17 @@ class EeroDeviceBandDetails(BaseModel):
     ethernet_address: str
 
 
+class NightlightSchedule(BaseModel):
+    on: str | None = None
+    off: str | None = None
+
+
+class Nightlight(BaseModel):
+    enabled: bool
+    brightness: int | None = None
+    schedule: NightlightSchedule | None = None
+
+
 class Message(BaseModel):
     value: str
 
@@ -217,7 +235,7 @@ class EeroDevice(BaseModel):
     messages: list[Message]
     model: str
     model_number: str
-    ethernet_addresses: list[str]
+    ethernet_addresses: list[str] | None = None
     ethernet_status: EeroDeviceEthernetStatus | None = None
     wifi_bssids: list[str]
     update_available: bool
@@ -230,7 +248,7 @@ class EeroDevice(BaseModel):
     led_brightness: int
     using_wan: bool
     is_primary_node: bool
-    nightlight: str | None = None
+    nightlight: Nightlight | str | None = None
     last_reboot: datetime | None = None
     mac_address: str
     ipv6_addresses: list[IP6Address]

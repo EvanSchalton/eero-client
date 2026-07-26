@@ -157,11 +157,11 @@ class EeroDeviceEthernetStatusItem(BaseModel):
     isWanPort: bool
     isLte: bool
     isLeafWiredToUpstream: bool
-    neighbor: str | None = None
+    neighbor: str | dict[str, Any] | None = None
     power_saving: bool
     original_speed: str | None = None
     derated_reason: str | None = None
-    lldpInfo: list[dict[str, str]]
+    lldpInfo: list[dict[str, str | None]]
 
 
 class EeroDeviceEthernetStatus(BaseModel):
@@ -231,7 +231,7 @@ class EeroDevice(BaseModel):
     using_wan: bool
     is_primary_node: bool
     nightlight: str | None = None
-    last_reboot: datetime
+    last_reboot: datetime | None = None
     mac_address: str
     ipv6_addresses: list[IP6Address]
     organization: str | None = None

@@ -431,7 +431,7 @@ class Networks(BaseModel):
     amazon_device_nickname: bool
     vlan: str | None = None
     ddns: DDNS
-    ring_lte: RingLTE
+    ring_lte: RingLTE | None = None
     pppoe_username: str | None = None
     pppoe_enabled: str | None = None
     proxied_nodes: str | None = None

@@ -366,6 +366,12 @@ class IPV6Settings(BaseModel):
     name_servers: NameServers
 
 
+class IPv6Lease(BaseModel):
+    prefix: str | None = None
+    subnets: list[str] | None = None
+    name_servers: list[str] | None = None
+
+
 class GuestNetwork(BaseModel):
     url: str
     resources: dict[str, str]
@@ -432,9 +438,9 @@ class Networks(BaseModel):
     owner: str
     premium_status: str
     rebooting: str | None = None
-    last_reboot: datetime
+    last_reboot: datetime | None = None
     homekit: str | None = None
-    ipv6_lease: str | None = None
+    ipv6_lease: IPv6Lease | str | None = None
     ipv6: IPV6Settings
     organization: str | None = None
     image_assets: str | None = None

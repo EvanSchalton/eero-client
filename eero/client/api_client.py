@@ -44,7 +44,7 @@ class APIClient:
 
     def _parse_response(self, action, response) -> dict[str, Any]:
         data = json.loads(response.text)
-        logger.debug("Response for %s: %s", action, data)
+        logger.debug("Received response for %s", action)
         try:
             if data["meta"]["code"] not in [
                 HTTPStatus.OK,
@@ -64,7 +64,7 @@ class APIClient:
         except ClientException as e:
             raise e
         except Exception as e:
-            logger.error("KeyError - Failed to parse response: %s [%s]", data, e)
+            logger.error("Failed to parse response for %s: %s", action, e)
             try:
                 raise ClientException(
                     data.get("result", {}).get("error", {}).get("requestId"),

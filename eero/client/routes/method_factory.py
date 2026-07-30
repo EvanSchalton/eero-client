@@ -17,10 +17,39 @@ DEBUGGING_PATH = (
     if (raw_debugging_path := os.environ.get("DEBUGGING_PATH", None))
     else None
 )
-if DEBUGGING_PATH:
-    DEBUGGING_PATH.mkdir(parents=True, exist_ok=True)
-
 logger.debug("DEBUGGING_PATH: %s", DEBUGGING_PATH)
+
+
+def _write_debug_payload(action: str, result: Any) -> None:
+    """Write an explicitly requested raw response with restricted permissions."""
+    if DEBUGGING_PATH is None:
+        return
+
+    DEBUGGING_PATH.mkdir(mode=0o700, parents=True, exist_ok=True)
+    if os.name != "nt":
+        DEBUGGING_PATH.chmod(0o700)
+    output_path = DEBUGGING_PATH / f"{action}.json"
+    file_descriptor = os.open(
+        output_path,
+        os.O_WRONLY | os.O_CREAT | os.O_TRUNC,
+        0o600,
+    )
+    with os.fdopen(file_descriptor, "w") as output_file:
+        json.dump(result, output_file, indent=2)
+    if os.name != "nt":
+        output_path.chmod(0o600)
+
+
+def _validation_error_summary(error: ValidationError) -> list[dict[str, Any]]:
+    """Return validation diagnostics without values or validator messages."""
+    return [
+        {"location": item["loc"], "type": item["type"]}
+        for item in error.errors(
+            include_url=False,
+            include_context=False,
+            include_input=False,
+        )
+    ]
 
 
 def make_method(method: str, action: str, resource: Resource, **kwargs: Any):
@@ -36,21 +65,17 @@ def make_method(method: str, action: str, resource: Resource, **kwargs: Any):
         url, model = resource
         logger.debug("%s: %s (%s)", action, url, model)
         for key, value in kwargs.items():
-            url = url.replace("<{}>".format(key), str(value))
+            url = url.replace(f"<{key}>", str(value))
 
         result = self.refreshed(lambda: self.client.request(method, url))
 
         if model is not None:
             try:
-                if DEBUGGING_PATH:
-                    (DEBUGGING_PATH / f"{action}.json").write_text(
-                        json.dumps(result, indent=2)
-                    )
+                _write_debug_payload(action, result)
 
-                logger.debug("Validating %s: %s", action, result)
+                logger.debug("Validating response for %s", action)
                 logger.debug("Model: %s", model)
                 logger.debug("Model Type: %s", type(model))
-                logger.debug("Result: %s", result)
 
                 try:
                     if isinstance(result, list):
@@ -58,21 +83,25 @@ def make_method(method: str, action: str, resource: Resource, **kwargs: Any):
                             list[type(model)]  # type: ignore
                         ).validate_python(result)
                     return model.model_validate(result)  # type: ignore
+                except ValidationError:
+                    raise
                 except Exception as e:
                     logger.error(
-                        "[%s] Failed to Marshal %s: %s",
+                        "[%s] Failed to marshal response (%s)",
                         action,
-                        e,
-                        result,
-                        exc_info=True,
+                        type(e).__name__,
                     )
-                    raise e
+                    raise
 
             except ValidationError as e:
                 if model == ErrorMeta:
-                    logger.warn(f"Not Implemented: {action} (expected error)")
+                    logger.warning("Not Implemented: %s (expected error)", action)
                     return result
-                logger.error("Failed to validate %s: %s", action, e)
+                logger.error(
+                    "Failed to validate %s: %s",
+                    action,
+                    _validation_error_summary(e),
+                )
         return result
 
     return lambda self, **caller_kwargs: func(self, **kwargs, **caller_kwargs)

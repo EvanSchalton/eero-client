@@ -391,6 +391,12 @@ class RingLTE(BaseModel):
     apn: str | None = None
 
 
+class NetworkHomeKit(BaseModel):
+    enabled: bool
+    enabledLastChanged: datetime | None = None
+    managedNetworkEnabled: bool
+
+
 class PremiumDetails(BaseModel):
     trial_ends: datetime | None = None
     has_payment_info: bool
@@ -439,7 +445,7 @@ class Networks(BaseModel):
     premium_status: str
     rebooting: str | None = None
     last_reboot: datetime | None = None
-    homekit: str | None = None
+    homekit: NetworkHomeKit | str | None = None
     ipv6_lease: IPv6Lease | str | None = None
     ipv6: IPV6Settings
     organization: str | None = None

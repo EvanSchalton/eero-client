@@ -122,9 +122,16 @@ class DHCPIP(BaseModel):
     router: str
 
 
+class DHCPCustomRange(BaseModel):
+    subnet_ip: str
+    subnet_mask: str | None = None
+    start_ip: str | None = None
+    end_ip: str | None = None
+
+
 class DHCP(BaseModel):
     mode: str
-    custom: str | None = None
+    custom: DHCPCustomRange | str | None = None
 
 
 class Lease(BaseModel):
@@ -157,11 +164,11 @@ class EeroDeviceEthernetStatusItem(BaseModel):
     isWanPort: bool
     isLte: bool
     isLeafWiredToUpstream: bool
-    neighbor: str | None = None
+    neighbor: str | dict[str, Any] | None = None
     power_saving: bool
     original_speed: str | None = None
     derated_reason: str | None = None
-    lldpInfo: list[dict[str, str]]
+    lldpInfo: list[dict[str, str | None]]
 
 
 class EeroDeviceEthernetStatus(BaseModel):
@@ -198,6 +205,17 @@ class EeroDeviceBandDetails(BaseModel):
     ethernet_address: str
 
 
+class NightlightSchedule(BaseModel):
+    on: str | None = None
+    off: str | None = None
+
+
+class Nightlight(BaseModel):
+    enabled: bool
+    brightness: int | None = None
+    schedule: NightlightSchedule | None = None
+
+
 class Message(BaseModel):
     value: str
 
@@ -217,7 +235,7 @@ class EeroDevice(BaseModel):
     messages: list[Message]
     model: str
     model_number: str
-    ethernet_addresses: list[str]
+    ethernet_addresses: list[str] | None = None
     ethernet_status: EeroDeviceEthernetStatus | None = None
     wifi_bssids: list[str]
     update_available: bool
@@ -230,8 +248,8 @@ class EeroDevice(BaseModel):
     led_brightness: int
     using_wan: bool
     is_primary_node: bool
-    nightlight: str | None = None
-    last_reboot: datetime
+    nightlight: Nightlight | str | None = None
+    last_reboot: datetime | None = None
     mac_address: str
     ipv6_addresses: list[IP6Address]
     organization: str | None = None
@@ -348,6 +366,12 @@ class IPV6Settings(BaseModel):
     name_servers: NameServers
 
 
+class IPv6Lease(BaseModel):
+    prefix: str | None = None
+    subnets: list[str] | None = None
+    name_servers: list[str] | None = None
+
+
 class GuestNetwork(BaseModel):
     url: str
     resources: dict[str, str]
@@ -367,13 +391,19 @@ class RingLTE(BaseModel):
     apn: str | None = None
 
 
+class NetworkHomeKit(BaseModel):
+    enabled: bool
+    enabledLastChanged: datetime | None = None
+    managedNetworkEnabled: bool
+
+
 class PremiumDetails(BaseModel):
     trial_ends: datetime | None = None
     has_payment_info: bool
     tier: str
     is_iap_customer: bool | None = None
     payment_method: str | None = None
-    interval: str
+    interval: str | None = None
     next_billing_event_date: datetime | None = None
     is_my_subscription: bool
 
@@ -414,24 +444,24 @@ class Networks(BaseModel):
     owner: str
     premium_status: str
     rebooting: str | None = None
-    last_reboot: datetime
-    homekit: str | None = None
-    ipv6_lease: str | None = None
+    last_reboot: datetime | None = None
+    homekit: NetworkHomeKit | str | None = None
+    ipv6_lease: IPv6Lease | str | None = None
     ipv6: IPV6Settings
     organization: str | None = None
     image_assets: str | None = None
     access_expires_on: datetime | None = None
     guest_network: GuestNetwork
     amazon_account_linked: bool
-    amazon_directed_id: str
-    amazon_full_name: str
+    amazon_directed_id: str | None = None
+    amazon_full_name: str | None = None
     ffs: bool
     temporary_flags: dict[str, Any]
     alexa_skill: bool
     amazon_device_nickname: bool
     vlan: str | None = None
     ddns: DDNS
-    ring_lte: RingLTE
+    ring_lte: RingLTE | None = None
     pppoe_username: str | None = None
     pppoe_enabled: str | None = None
     proxied_nodes: str | None = None

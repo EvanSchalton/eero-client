@@ -21,7 +21,7 @@ class NetworkInfo(BaseModel):
     created: str
     nickname_label: str | None = None
     access_expires_on: datetime | None = None
-    amazon_directed_id: str
+    amazon_directed_id: str | None = None
 
     @property
     def id(self):
@@ -45,7 +45,7 @@ class PremiumDetails(BaseModel):
     tier: str
     is_iap_customer: bool
     payment_method: str | None = None
-    interval: str
+    interval: str | None = None
     next_billing_event_date: datetime | None = None
 
 

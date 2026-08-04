@@ -16,5 +16,5 @@ class Thread(BaseModel):
     channel: int
     master_key: str
     commissioning_credential: str
-    border_agent: ThreadBorderAgent
+    border_agent: ThreadBorderAgent | None = None
     active_operational_dataset: str
